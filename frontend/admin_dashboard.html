@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CryptoVault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: rgba(255,255,255,0.1);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1f3a;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .chat-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .chat-item.unread {
+            border-left: 4px solid #667eea;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🔐 Admin Dashboard</h1>
+                <p style="opacity: 0.9; margin-top: 5px;">Manage your platform</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending KYC</h3>
+                <div class="stat-value" id="pendingKYC">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Payments</h3>
+                <div class="stat-value" id="pendingPayments">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Unread Chats</h3>
+                <div class="stat-value" id="unreadChats">0</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('users')">👥 Users</div>
+            <div class="tab" onclick="showTab('payments')">💳 Payments</div>
+            <div class="tab" onclick="showTab('kyc')">🆔 KYC</div>
+            <div class="tab" onclick="showTab('chats')">💬 Chats</div>
+            <div class="tab" onclick="showTab('wallet')">💰 Wallet Management</div>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="users-tab" class="tab-content active">
+            <div class="card">
+                <h2>All Users</h2>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>KYC Status</th>
+                            <th>Balance (USDT)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody">
+                        <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payments Tab -->
+        <div id="payments-tab" class="tab-content">
+            <div class="card">
+                <h2>Pending Payments</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Method</th>
+                            <th>Amount</th>
+                            <th>Crypto</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsBody">
+                        <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- KYC Tab -->
+        <div id="kyc-tab" class="tab-content">
+            <div class="card">
+                <h2>Pending KYC Submissions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Full Name</th>
+                            <th>Country</th>
+                            <th>ID Type</th>
+                            <th>Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kycBody">
+                        <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Chats Tab -->
+        <div id="chats-tab" class="tab-content">
+            <div class="card">
+                <h2>User Chats</h2>
+                <div class="chat-list" id="chatsList">
+                    <p style="text-align:center;">Loading chats...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Management Tab -->
+        <div id="wallet-tab" class="tab-content">
+            <div class="card">
+                <h2>Wallet Management</h2>
+                <div class="form-group">
+                    <label>Search User by Email</label>
+                    <input type="email" id="walletUserEmail" placeholder="user@example.com">
+                    <button class="btn btn-primary" style="margin-top:10px;" onclick="searchUser()">Search</button>
+                </div>
+                <div id="walletManagement" style="display:none; margin-top:30px;">
+                    <h3>User: <span id="selectedUserName"></span></h3>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px;">
+                        <div>
+                            <h4>Credit Balance</h4>
+                            <select id="creditCrypto" style="margin-top:10px;">
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                                <option value="BNB">Binance Coin (BNB)</option>
+                                <option value="SOL">Solana (SOL)</option>
+                                <option value="XRP">Ripple (XRP)</option>
+                                <option value="ADA">Cardano (ADA)</option>
+                                <option value="DOT">Polkadot (DOT)</option>
+                                <option value="XMR">Monero (XMR)</option>
+                            </select>
+                            <input type="number" id="creditAmount" placeholder="Amount" step="0.0001" style="margin-top:10px;">
+                            <input type="text" id="creditNotes" placeholder="Notes (optional)" style="margin-top:10px;">
+                            <button class="btn btn-success" style="margin-top:10px; width:100%;" onclick="creditBalance()">Credit Balance</button>
+                        </div>
+                        <div>
+                            <h4>Set Wallet Address</h4>
+                            <select id="addressCrypto" style="margin-top:10px;">
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                                <option value="BNB">Binance Coin (BNB)</option>
+                                <option value="SOL">Solana (SOL)</option>
+                                <option value="XRP">Ripple (XRP)</option>
+                                <option value="ADA">Cardano (ADA)</option>
+                                <option value="DOT">Polkadot (DOT)</option>
+                                <option value="XMR">Monero (XMR)</option>
+                            </select>
+                            <input type="text" id="walletAddress" placeholder="Wallet Address" style="margin-top:10px;">
+                            <select id="walletNetwork" style="margin-top:10px;">
+                                <option value="mainnet">Mainnet</option>
+                                <option value="testnet">Testnet</option>
+                                <option value="bep20">BEP-20</option>
+                                <option value="erc20">ERC-20</option>
+                            </select>
+                            <button class="btn btn-primary" style="margin-top:10px; width:100%;" onclick="setWalletAddress()">Set Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content">
+            <h2>Chat with <span id="chatUserName"></span></h2>
+            <div id="chatMessages" style="max-height:400px; overflow-y:auto; margin:20px 0; padding:15px; background:rgba(255,255,255,0.05); border-radius:10px;">
+                <!-- Messages will load here -->
+            </div>
+            <div class="form-group">
+                <textarea id="chatReplyMessage" rows="3" placeholder="Type your reply..."></textarea>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary" onclick="sendChatReply()">Send Reply</button>
+                <button class="btn btn-danger" onclick="closeChatModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://164.92.138.206:8001/api';
+        const token = localStorage.getItem('admin_token');
+        let selectedUserId = null;
+        let currentChatUserId = null;
+
+        if (!token) {
+            window.location.href = '/admin.html';
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Load data for the tab
+            if (tabName === 'users') loadUsers();
+            else if (tabName === 'payments') loadPayments();
+            else if (tabName === 'kyc') loadKYC();
+            else if (tabName === 'chats') loadChats();
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/admin/stats`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                document.getElementById('totalUsers').textContent = data.total_users;
+                document.getElementById('pendingKYC').textContent = data.kyc_pending;
+                document.getElementById('pendingPayments').textContent = data.pending_payments;
+                document.getElementById('unreadChats').textContent = data.unread_chats;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}/admin/users`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const tbody = document.getElementById('usersBody');
+                tbody.innerHTML = data.users.map(user => `
+                    <tr>
+                        <td>${user.email}</td>
+                        <td>${user.full_name}</td>
+                        <td><span class="status-badge status-${user.kyc_verified ? 'approved' : 'pending'}">${user.kyc_verified ? 'Verified' : 'Not Verified'}</span></td>
+                        <td>${(user.balances?.USDT || 0).toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewUser('${user.id}')">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        async function loadPayments() {
+            try {
+                const response = await fetch(`${API_URL}/admin/payments/pending`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const tbody = document.getElementById('paymentsBody');
+                if (data.payments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No pending payments</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = data.payments.map(payment => `
+                    <tr>
+                        <td>${payment.user_email}</td>
+                        <td>${payment.payment_method}</td>
+                        <td>$${payment.amount}</td>
+                        <td>${payment.crypto}</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <button class="btn btn-success" onclick="verifyPayment('${payment.id}', 'approved')">Approve</button>
+                            <button class="btn btn-danger" onclick="verifyPayment('${payment.id}', 'rejected')">Reject</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading payments:', error);
+            }
+        }
+
+        async function loadKYC() {
+            try {
+                const response = await fetch(`${API_URL}/admin/kyc-pending`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const tbody = document.getElementById('kycBody');
+                if (data.submissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No pending KYC submissions</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = data.submissions.map(kyc => `
+                    <tr>
+                        <td>${kyc.user?.email || 'N/A'}</td>
+                        <td>${kyc.full_name}</td>
+                        <td>${kyc.country}</td>
+                        <td>${kyc.id_type}</td>
+                        <td>${new Date(kyc.submitted_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-success" onclick="approveKYC('${kyc.user_id}')">Approve</button>
+                            <button class="btn btn-danger" onclick="rejectKYC('${kyc.user_id}')">Reject</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading KYC:', error);
+            }
+        }
+
+        async function loadChats() {
+            try {
+                const response = await fetch(`${API_URL}/admin/chat-messages`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const chatsList = document.getElementById('chatsList');
+                if (data.chats.length === 0) {
+                    chatsList.innerHTML = '<p style="text-align:center;">No chats yet</p>';
+                    return;
+                }
+                
+                chatsList.innerHTML = data.chats.map(chat => {
+                    const lastMsg = chat.messages[chat.messages.length - 1];
+                    return `
+                        <div class="chat-item ${chat.unread_count > 0 ? 'unread' : ''}" onclick="openChat('${chat.user.id}', '${chat.user.name}')">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <strong>${chat.user.name}</strong>
+                                <span style="opacity:0.6; font-size:12px;">${new Date(lastMsg.created_at).toLocaleTimeString()}</span>
+                            </div>
+                            <div style="opacity:0.8; font-size:14px;">${lastMsg.message.substring(0, 50)}${lastMsg.message.length > 50 ? '...' : ''}</div>
+                            ${chat.unread_count > 0 ? `<span class="status-badge status-pending" style="margin-top:5px;">${chat.unread_count} unread</span>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading chats:', error);
+            }
+        }
+
+        function openChat(userId, userName) {
+            currentChatUserId = userId;
+            document.getElementById('chatUserName').textContent = userName;
+            loadChatMessages(userId);
+            document.getElementById('chatModal').classList.add('show');
+        }
+
+        async function loadChatMessages(userId) {
+            // In production, this would fetch messages for specific user
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML = '<p style="text-align:center;">Loading messages...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/chat-messages`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const userChat = data.chats.find(c => c.user.id === userId);
+                if (userChat) {
+                    messagesDiv.innerHTML = userChat.messages.map(msg => `
+                        <div style="margin-bottom:15px; padding:10px; background:${msg.sender === 'user' ? 'rgba(102,126,234,0.2)' : 'rgba(118,75,162,0.2)'}; border-radius:8px;">
+                            <div style="font-weight:600; margin-bottom:5px;">${msg.sender === 'user' ? 'User' : 'You'}</div>
+                            <div>${msg.message}</div>
+                            <div style="opacity:0.6; font-size:12px; margin-top:5px;">${new Date(msg.created_at).toLocaleTimeString()}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading chat messages:', error);
+            }
+        }
+
+        async function sendChatReply() {
+            const message = document.getElementById('chatReplyMessage').value.trim();
+            if (!message) return;
+            
+            try {
+                const formData = new FormData();
+                formData.append('user_id', currentChatUserId);
+                formData.append('message', message);
+                
+                const response = await fetch(`${API_URL}/admin/chat-reply`, {
+                    method: 'POST',
+                    headers: {'Authorization': `Bearer ${token}`},
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    document.getElementById('chatReplyMessage').value = '';
+                    loadChatMessages(currentChatUserId);
+                    alert('Reply sent!');
+                }
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                alert('Failed to send reply');
+            }
+        }
+
+        function closeChatModal() {
+            document.getElementById('chatModal').classList.remove('show');
+            loadChats();
+        }
+
+        async function verifyPayment(paymentId, status) {
+            const notes = status === 'rejected' ? prompt('Enter rejection reason:') : 'Approved by admin';
+            if (status === 'rejected' && !notes) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/payments/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({payment_id: paymentId, status, notes})
+                });
+                
+                if (response.ok) {
+                    alert(`Payment ${status}!`);
+                    loadPayments();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error('Error verifying payment:', error);
+            }
+        }
+
+        async function approveKYC(userId) {
+            if (!confirm('Approve this KYC submission?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/kyc-approve/${userId}`, {
+                    method: 'POST',
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                
+                if (response.ok) {
+                    alert('KYC approved!');
+                    loadKYC();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error('Error approving KYC:', error);
+            }
+        }
+
+        async function rejectKYC(userId) {
+            const reason = prompt('Enter rejection reason:');
+            if (!reason) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/kyc-reject/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({reason})
+                });
+                
+                if (response.ok) {
+                    alert('KYC rejected');
+                    loadKYC();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error('Error rejecting KYC:', error);
+            }
+        }
+
+        async function searchUser() {
+            const email = document.getElementById('walletUserEmail').value.trim();
+            if (!email) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/users`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await response.json();
+                
+                const user = data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+                if (user) {
+                    selectedUserId = user.id;
+                    document.getElementById('selectedUserName').textContent = `${user.full_name} (${user.email})`;
+                    document.getElementById('walletManagement').style.display = 'block';
+                } else {
+                    alert('User not found');
+                }
+            } catch (error) {
+                console.error('Error searching user:', error);
+            }
+        }
+
+        async function creditBalance() {
+            if (!selectedUserId) return;
+            
+            const crypto = document.getElementById('creditCrypto').value;
+            const amount = parseFloat(document.getElementById('creditAmount').value);
+            const notes = document.getElementById('creditNotes').value;
+            
+            if (!amount || amount <= 0) {
+                alert('Enter valid amount');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/wallet/credit`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: selectedUserId,
+                        crypto,
+                        amount,
+                        operation: 'credit',
+                        notes
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Successfully credited ${amount} ${crypto}. New balance: ${data.new_balance}`);
+                    document.getElementById('creditAmount').value = '';
+                    document.getElementById('creditNotes').value = '';
+                }
+            } catch (error) {
+                console.error('Error crediting balance:', error);
+                alert('Failed to credit balance');
+            }
+        }
+
+        async function setWalletAddress() {
+            if (!selectedUserId) return;
+            
+            const crypto = document.getElementById('addressCrypto').value;
+            const address = document.getElementById('walletAddress').value.trim();
+            const network = document.getElementById('walletNetwork').value;
+            
+            if (!address) {
+                alert('Enter wallet address');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/wallet/set-address`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: selectedUserId,
+                        crypto,
+                        address,
+                        network
+                    })
+                });
+                
+                if (response.ok) {
+                    alert(`Successfully set ${crypto} wallet address`);
+                    document.getElementById('walletAddress').value = '';
+                }
+            } catch (error) {
+                console.error('Error setting wallet address:', error);
+                alert('Failed to set wallet address');
+            }
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.removeItem('admin_token');
+                window.location.href = '/admin.html';
+            }
+        }
+
+        // Initialize
+        loadStats();
+        loadUsers();
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CryptoVault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 260px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .menu-item span {
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        /* Balances */
+        .balances-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .balances-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .balances-header h2 {
+            font-size: 22px;
+        }
+
+        .balances-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .balance-card:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .balance-crypto {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .balance-symbol {
+            font-weight: bold;
+            font-size: 16px;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.2);
+        }
+
+        .action-btn span {
+            font-size: 24px;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-badge::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Loading Indicator */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            margin-top: auto;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">🔐 CryptoVault</div>
+        
+        <ul class="menu">
+            <a href="/dashboard.html" class="menu-item active">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="/wallet.html" class="menu-item">
+                <span>💰</span> Wallet
+            </a>
+            <a href="/trade.html" class="menu-item">
+                <span>📈</span> Trade
+            </a>
+            <a href="/mining.html" class="menu-item">
+                <span>⛏️</span> Mining
+            </a>
+            <a href="/deposit.html" class="menu-item">
+                <span>💳</span> Deposit
+            </a>
+            <a href="/withdraw.html" class="menu-item">
+                <span>💸</span> Withdraw
+            </a>
+            <a href="/kyc.html" class="menu-item">
+                <span>🆔</span> KYC
+            </a>
+            <a href="/support-chat.html" class="menu-item notification-badge">
+                <span>💬</span> Support
+            </a>
+        </ul>
+
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <div class="user-info">
+                <span class="status-badge" id="connectionStatus">Connecting...</span>
+                <span id="userName">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Loading your dashboard...</p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" style="display: none;">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>💰 Total Balance</h3>
+                    <div class="stat-value" id="totalBalance">$0.00</div>
+                    <div class="stat-change positive" id="balanceChange">+0.00%</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>📈 Total Earnings</h3>
+                    <div class="stat-value" id="totalEarnings">$0.00</div>
+                    <div class="stat-change positive">+0.00%</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>⛏️ Mining Status</h3>
+                    <div class="stat-value" id="miningStatus">-</div>
+                    <div class="stat-change" id="miningCount">0 active</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>✅ KYC Status</h3>
+                    <div class="stat-value" id="kycStatus">-</div>
+                    <div class="stat-change" id="kycMessage">Check status</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="/trade.html" class="action-btn">
+                    <span>📈</span> Trade Now
+                </a>
+                <a href="/deposit.html" class="action-btn">
+                    <span>💳</span> Deposit Funds
+                </a>
+                <a href="/mining.html" class="action-btn">
+                    <span>⛏️</span> Start Mining
+                </a>
+                <a href="/withdraw.html" class="action-btn">
+                    <span>💸</span> Withdraw
+                </a>
+            </div>
+
+            <!-- Balances Section -->
+            <div class="balances-section">
+                <div class="balances-header">
+                    <h2>Your Crypto Balances</h2>
+                    <button onclick="loadBalances()" class="action-btn" style="width: auto;">
+                        🔄 Refresh
+                    </button>
+                </div>
+                <div class="balances-grid" id="balancesGrid">
+                    <!-- Balances will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://164.92.138.206:8001/api';
+        const WS_URL = 'ws://164.92.138.206:8001';
+        let ws = null;
+        let token = localStorage.getItem('token');
+        let user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        // Check authentication
+        if (!token) {
+            window.location.href = '/login.html';
+        }
+
+        // Crypto icons mapping
+        const cryptoIcons = {
+            'BTC': '₿',
+            'ETH': 'Ξ',
+            'USDT': '₮',
+            'BNB': '🔸',
+            'SOL': '◎',
+            'XRP': '✕',
+            'ADA': '₳',
+            'DOT': '●',
+            'XMR': 'ɱ'
+        };
+
+        // Initialize WebSocket
+        function connectWebSocket() {
+            if (!user.id) return;
+
+            const statusBadge = document.getElementById('connectionStatus');
+            statusBadge.textContent = 'Connecting...';
+            statusBadge.className = 'status-badge';
+
+            ws = new WebSocket(`${WS_URL}/ws/${user.id}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                statusBadge.textContent = 'Online';
+                statusBadge.className = 'status-badge online';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('WebSocket message:', data);
+
+                // Handle different message types
+                if (data.type === 'balance_update') {
+                    loadBalances();
+                } else if (data.type === 'trade_complete') {
+                    loadBalances();
+                    showNotification('Trade executed successfully!');
+                } else if (data.type === 'kyc_approved') {
+                    loadDashboard();
+                    showNotification('KYC approved! You can now withdraw funds.');
+                } else if (data.type === 'payment_approved') {
+                    loadBalances();
+                    showNotification(`Payment approved! ${data.amount} ${data.crypto} added to your account.`);
+                }
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                statusBadge.textContent = 'Offline';
+                statusBadge.className = 'status-badge offline';
+                
+                // Reconnect after 3 seconds
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load user wallet
+                const walletResponse = await fetch(`${API_URL}/wallet/balance`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (walletResponse.ok) {
+                    const walletData = await walletResponse.json();
+                    
+                    // Update balances
+                    displayBalances(walletData.balances);
+                    
+                    // Calculate total balance
+                    const totalUSD = calculateTotalBalance(walletData.balances);
+                    document.getElementById('totalBalance').textContent = `$${totalUSD.toFixed(2)}`;
+                    
+                    // Update earnings
+                    document.getElementById('totalEarnings').textContent = `$${(walletData.total_earnings || 0).toFixed(2)}`;
+                    
+                    // Update KYC status
+                    updateKYCStatus(walletData.kyc_status, walletData.kyc_verified);
+                }
+
+                // Load mining status
+                const miningResponse = await fetch(`${API_URL}/mining/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (miningResponse.ok) {
+                    const miningData = await miningResponse.json();
+                    const activeCount = miningData.active_sessions || 0;
+                    document.getElementById('miningStatus').textContent = activeCount > 0 ? 'Active' : 'Inactive';
+                    document.getElementById('miningCount').textContent = `${activeCount} active`;
+                }
+
+                // Hide loading, show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('loadingState').innerHTML = '<p>Error loading dashboard. Please refresh the page.</p>';
+            }
+        }
+
+        function displayBalances(balances) {
+            const grid = document.getElementById('balancesGrid');
+            grid.innerHTML = '';
+
+            for (const [crypto, amount] of Object.entries(balances)) {
+                const card = document.createElement('div');
+                card.className = 'balance-card';
+                card.innerHTML = `
+                    <div class="balance-crypto">${cryptoIcons[crypto] || '💎'}</div>
+                    <div class="balance-symbol">${crypto}</div>
+                    <div class="balance-amount">${parseFloat(amount).toFixed(4)}</div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        function calculateTotalBalance(balances) {
+            // Simplified: Use USDT as baseline
+            // In production, you'd fetch real-time prices
+            const usdtValue = balances.USDT || 0;
+            const btcValue = (balances.BTC || 0) * 45000;
+            const ethValue = (balances.ETH || 0) * 2500;
+            
+            return usdtValue + btcValue + ethValue;
+        }
+
+        function updateKYCStatus(status, verified) {
+            const statusEl = document.getElementById('kycStatus');
+            const messageEl = document.getElementById('kycMessage');
+
+            if (verified) {
+                statusEl.textContent = '✓';
+                messageEl.textContent = 'Verified';
+                messageEl.className = 'stat-change positive';
+            } else if (status === 'pending') {
+                statusEl.textContent = '⏳';
+                messageEl.textContent = 'Pending';
+                messageEl.className = 'stat-change';
+            } else {
+                statusEl.textContent = '✗';
+                messageEl.textContent = 'Not submitted';
+                messageEl.className = 'stat-change negative';
+            }
+        }
+
+        async function loadBalances() {
+            try {
+                const response = await fetch(`${API_URL}/wallet/balance`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayBalances(data.balances);
+                    
+                    const totalUSD = calculateTotalBalance(data.balances);
+                    document.getElementById('totalBalance').textContent = `$${totalUSD.toFixed(2)}`;
+                }
+            } catch (error) {
+                console.error('Error refreshing balances:', error);
+            }
+        }
+
+        function showNotification(message) {
+            // Simple notification
+            alert(message);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                if (ws) ws.close();
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Update user name
+        document.getElementById('userName').textContent = user.full_name || user.email || 'User';
+
+        // Initialize
+        loadDashboard();
+        connectWebSocket();
+
+        // Refresh dashboard every 30 seconds
+        setInterval(loadBalances, 30000);
+    </script>
+</body>
+</html>

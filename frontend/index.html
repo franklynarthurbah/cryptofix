@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVault - Your Trusted Crypto Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 50px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 60px;
+            animation: fadeInUp 1s 0.4s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(102,126,234,0.3);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Cryptocurrencies Section */
+        .crypto-section {
+            padding: 100px 50px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .crypto-card {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .crypto-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(102,126,234,0.3);
+        }
+
+        .crypto-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+
+        .crypto-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .crypto-symbol {
+            opacity: 0.6;
+            font-size: 14px;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 80px;
+            opacity: 0.2;
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .author-info p {
+            opacity: 0.6;
+            font-size: 14px;
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0e27;
+            padding: 60px 50px 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .features-grid,
+            .crypto-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="hero">
+        <nav>
+            <div class="logo">
+                🔐 CryptoVault
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#crypto">Currencies</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="cta-buttons">
+                <a href="/login.html" class="btn btn-secondary">Login</a>
+                <a href="/register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1>Trade Crypto with Confidence</h1>
+            <p>The most trusted platform for buying, selling, and managing your cryptocurrency portfolio</p>
+            <div class="cta-buttons" style="justify-content: center;">
+                <a href="/register.html" class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;">Start Trading Now</a>
+                <a href="#testimonials" class="btn btn-secondary" style="font-size: 18px; padding: 15px 40px;">Learn More</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">$2.5B+</div>
+                    <div class="stat-label">Trading Volume</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">150K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Cryptocurrencies</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose CryptoVault?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Bank-Level Security</h3>
+                <p>Your funds are protected with military-grade encryption, cold storage, and multi-factor authentication.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Trading</h3>
+                <p>Execute trades in milliseconds with our high-performance matching engine and real-time price updates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Low Fees</h3>
+                <p>Industry-leading low trading fees with no hidden charges. Keep more of your profits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile First</h3>
+                <p>Trade on the go with our responsive design that works perfectly on all devices.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Advanced Tools</h3>
+                <p>Professional trading tools, real-time charts, and market analysis to help you make informed decisions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>24/7 Support</h3>
+                <p>Our dedicated support team is always available to help you with any questions or issues.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Cryptocurrencies -->
+    <section class="crypto-section" id="crypto">
+        <h2 class="section-title">Supported Cryptocurrencies</h2>
+        <div class="crypto-grid">
+            <div class="crypto-card">
+                <div class="crypto-icon">₿</div>
+                <div class="crypto-name">Bitcoin</div>
+                <div class="crypto-symbol">BTC</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">Ξ</div>
+                <div class="crypto-name">Ethereum</div>
+                <div class="crypto-symbol">ETH</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">₮</div>
+                <div class="crypto-name">Tether</div>
+                <div class="crypto-symbol">USDT</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">🔸</div>
+                <div class="crypto-name">Binance Coin</div>
+                <div class="crypto-symbol">BNB</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">◎</div>
+                <div class="crypto-name">Solana</div>
+                <div class="crypto-symbol">SOL</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">✕</div>
+                <div class="crypto-name">Ripple</div>
+                <div class="crypto-symbol">XRP</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">₳</div>
+                <div class="crypto-name">Cardano</div>
+                <div class="crypto-symbol">ADA</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">●</div>
+                <div class="crypto-name">Polkadot</div>
+                <div class="crypto-symbol">DOT</div>
+            </div>
+            <div class="crypto-card">
+                <div class="crypto-icon">ɱ</div>
+                <div class="crypto-name">Monero</div>
+                <div class="crypto-symbol">XMR</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <h2 class="section-title">What Our Users Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "CryptoVault completely changed my crypto journey! The platform is incredibly intuitive, and I made my first profitable trade within hours of signing up. The real-time charts and instant execution make trading a breeze. I've tried other platforms, but none come close to this level of professionalism."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JM</div>
+                    <div class="author-info">
+                        <h4>James Mitchell</h4>
+                        <p>Day Trader • Toronto, Canada</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "As a beginner, I was nervous about crypto trading. CryptoVault's customer support team walked me through everything step by step. Within 3 months, I've grown my portfolio by 156%! The security features give me peace of mind, and the mobile app means I never miss an opportunity. Absolutely recommend!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SC</div>
+                    <div class="author-info">
+                        <h4>Sarah Chen</h4>
+                        <p>Investor • Singapore</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "I've been trading crypto for 5 years, and CryptoVault is hands down the best platform I've used. The low fees saved me thousands, the execution speed is unmatched, and I love the advanced trading tools. My portfolio has tripled in value since switching. This is the professional trader's choice!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MR</div>
+                    <div class="author-info">
+                        <h4>Marcus Rodriguez</h4>
+                        <p>Professional Trader • Miami, FL</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "The mining feature is genius! I'm earning passive income on my crypto holdings without lifting a finger. Combined with smart trading strategies, I've built a substantial portfolio. The platform is secure, transparent, and the support team actually cares. Five stars all the way!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">EK</div>
+                    <div class="author-info">
+                        <h4>Emma Kowalski</h4>
+                        <p>Crypto Enthusiast • London, UK</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "CryptoVault turned my $500 investment into $12,000 in just 8 months! The platform's analytics helped me identify winning trades, and the instant withdrawals mean I always have access to my funds. The KYC process was smooth, and I feel completely secure. Best decision I ever made!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DT</div>
+                    <div class="author-info">
+                        <h4>David Thompson</h4>
+                        <p>Entrepreneur • Sydney, Australia</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "Finally, a crypto platform that doesn't feel like a gamble! CryptoVault's educational resources and market insights helped me become a confident trader. I've referred 10 friends, and they're all thanking me. The community, the tools, the support - everything is world-class. 10/10 experience!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LN</div>
+                    <div class="author-info">
+                        <h4>Lisa Nakamoto</h4>
+                        <p>Tech Professional • Tokyo, Japan</p>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Start Your Crypto Journey?</h2>
+        <p>Join 150,000+ traders already using CryptoVault</p>
+        <a href="/register.html" class="btn btn-primary" style="font-size: 18px; padding: 15px 50px;">Create Free Account</a>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🔐 CryptoVault</h3>
+                <p>The most trusted cryptocurrency trading platform, providing secure and seamless trading experiences since 2020.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Products</h3>
+                <ul>
+                    <li><a href="/trade.html">Trading</a></li>
+                    <li><a href="/mining.html">Mining</a></li>
+                    <li><a href="/wallet.html">Wallet</a></li>
+                    <li><a href="/deposit.html">Deposit</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="/support-chat.html">Support</a></li>
+                    <li><a href="#features">Features</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CryptoVault. All rights reserved. | Trusted by 150,000+ traders worldwide</p>
+        </div>
+    </footer>
+</body>
+</html>
