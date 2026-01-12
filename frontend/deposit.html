@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -213,6 +213,10 @@
             text-decoration: underline;
         }
 
+        .required {
+            color: #ef4444;
+        }
+
         @media (max-width: 768px) {
             .payment-method-selector {
                 grid-template-columns: 1fr;
@@ -232,7 +236,7 @@
     <div class="container">
         <div class="header">
             <h1>💰 Deposit Funds</h1>
-            <p>Choose your preferred payment method</p>
+            <p>Choose your payment method and complete your deposit</p>
         </div>
 
         <div class="alert" id="alert"></div>
@@ -257,19 +261,19 @@
             <div class="info-box">
                 <h3>Bank Transfer Information</h3>
                 <ul>
-                    <li>Please fill in your bank details carefully</li>
-                    <li>Admin will verify your payment within 24 hours</li>
-                    <li>Funds will be credited after verification</li>
+                    <li>All fields are required for verification</li>
+                    <li>Admin will verify within 24 hours</li>
+                    <li>Funds credited after approval</li>
                 </ul>
             </div>
 
             <div class="form-group">
-                <label>Amount (USD)</label>
+                <label>Amount (USD) <span class="required">*</span></label>
                 <input type="number" step="0.01" min="10" required id="bank-amount" placeholder="100.00">
             </div>
 
             <div class="form-group">
-                <label>Cryptocurrency to Receive</label>
+                <label>Cryptocurrency to Receive <span class="required">*</span></label>
                 <select required id="bank-crypto">
                     <option value="BTC">Bitcoin (BTC)</option>
                     <option value="ETH">Ethereum (ETH)</option>
@@ -284,24 +288,34 @@
             </div>
 
             <div class="form-group">
-                <label>Bank Name</label>
+                <label>Bank Name <span class="required">*</span></label>
                 <input type="text" required id="bank-name" placeholder="Enter your bank name">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Account Number</label>
+                    <label>Account Number <span class="required">*</span></label>
                     <input type="text" required id="account-number" placeholder="1234567890">
                 </div>
                 <div class="form-group">
-                    <label>Routing Number</label>
+                    <label>Routing Number <span class="required">*</span></label>
                     <input type="text" required id="routing-number" placeholder="021000021">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Account Holder Name</label>
+                <label>Account Holder Name <span class="required">*</span></label>
                 <input type="text" required id="account-name" placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label>Country <span class="required">*</span></label>
+                <input type="text" required id="bank-country" placeholder="United States">
+            </div>
+
+            <div class="form-group">
+                <label>Additional Notes (Optional)</label>
+                <textarea id="bank-notes" rows="3" placeholder="Any additional information..."></textarea>
             </div>
 
             <button type="submit" class="submit-btn" id="bank-submit-btn">Submit Bank Transfer</button>
@@ -312,19 +326,19 @@
             <div class="info-box">
                 <h3>Card Payment Information</h3>
                 <ul>
-                    <li>We accept Visa, Mastercard, and American Express</li>
-                    <li>All card information is encrypted</li>
-                    <li>Verification typically takes 1-2 hours</li>
+                    <li>All card data encrypted</li>
+                    <li>Verification: 1-2 hours</li>
+                    <li>Secure payment processing</li>
                 </ul>
             </div>
 
             <div class="form-group">
-                <label>Amount (USD)</label>
+                <label>Amount (USD) <span class="required">*</span></label>
                 <input type="number" step="0.01" min="10" required id="card-amount" placeholder="100.00">
             </div>
 
             <div class="form-group">
-                <label>Cryptocurrency to Receive</label>
+                <label>Cryptocurrency to Receive <span class="required">*</span></label>
                 <select required id="card-crypto">
                     <option value="BTC">Bitcoin (BTC)</option>
                     <option value="ETH">Ethereum (ETH)</option>
@@ -339,23 +353,39 @@
             </div>
 
             <div class="form-group">
-                <label>Card Number</label>
+                <label>Card Number <span class="required">*</span></label>
                 <input type="text" required id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
             </div>
 
             <div class="form-group">
-                <label>Cardholder Name</label>
+                <label>Cardholder Name <span class="required">*</span></label>
                 <input type="text" required id="card-holder" placeholder="JOHN DOE">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Expiry Date</label>
+                    <label>Expiry Date <span class="required">*</span></label>
                     <input type="text" required id="expiry-date" placeholder="MM/YY" maxlength="5">
                 </div>
                 <div class="form-group">
-                    <label>CVV</label>
+                    <label>CVV <span class="required">*</span></label>
                     <input type="text" required id="cvv" placeholder="123" maxlength="4">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Billing Address <span class="required">*</span></label>
+                <input type="text" required id="billing-address" placeholder="Street Address">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City <span class="required">*</span></label>
+                    <input type="text" required id="billing-city" placeholder="City">
+                </div>
+                <div class="form-group">
+                    <label>ZIP Code <span class="required">*</span></label>
+                    <input type="text" required id="billing-zip" placeholder="12345">
                 </div>
             </div>
 
@@ -365,21 +395,21 @@
         <!-- Crypto Form -->
         <form class="payment-form" id="crypto-form">
             <div class="info-box">
-                <h3>Cryptocurrency Payment Information</h3>
+                <h3>Cryptocurrency Payment</h3>
                 <ul>
-                    <li>Send your crypto to our address</li>
-                    <li>Provide transaction hash for verification</li>
-                    <li>Minimum confirmation: 3 blocks</li>
+                    <li>Send to our address</li>
+                    <li>Provide transaction hash</li>
+                    <li>Minimum 3 confirmations</li>
                 </ul>
             </div>
 
             <div class="form-group">
-                <label>Amount (in crypto)</label>
+                <label>Amount (in crypto) <span class="required">*</span></label>
                 <input type="number" step="0.00000001" min="0.0001" required id="crypto-amount" placeholder="0.001">
             </div>
 
             <div class="form-group">
-                <label>Cryptocurrency</label>
+                <label>Cryptocurrency <span class="required">*</span></label>
                 <select required id="crypto-crypto">
                     <option value="BTC">Bitcoin (BTC)</option>
                     <option value="ETH">Ethereum (ETH)</option>
@@ -394,7 +424,7 @@
             </div>
 
             <div class="form-group">
-                <label>Network</label>
+                <label>Network <span class="required">*</span></label>
                 <select required id="crypto-network">
                     <option value="mainnet">Mainnet</option>
                     <option value="testnet">Testnet</option>
@@ -405,23 +435,23 @@
             </div>
 
             <div class="form-group">
-                <label>Your Wallet Address (From)</label>
+                <label>Your Wallet Address (From) <span class="required">*</span></label>
                 <input type="text" required id="from-address" placeholder="0x...">
             </div>
 
             <div class="form-group">
-                <label>Transaction Hash (TxID)</label>
+                <label>Transaction Hash (TxID) <span class="required">*</span></label>
                 <input type="text" required id="transaction-hash" placeholder="0x...">
             </div>
 
             <button type="submit" class="submit-btn" id="crypto-submit-btn">Submit Crypto Payment</button>
         </form>
 
-        <a href="/wallet.html" class="back-link">← Back to Wallet</a>
+        <a href="/dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
     <script>
-        const API_URL = 'http://164.92.138.206:8001/api';
+        const API_URL = `http://${window.location.hostname}:8001/api`;
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -429,13 +459,11 @@
         }
 
         function selectMethod(method) {
-            // Update active state
             document.querySelectorAll('.payment-method').forEach(el => {
                 el.classList.remove('active');
             });
             document.querySelector(`[data-method="${method}"]`).classList.add('active');
 
-            // Show corresponding form
             document.querySelectorAll('.payment-form').forEach(el => {
                 el.classList.remove('active');
             });
@@ -487,21 +515,23 @@
                         bank_name: document.getElementById('bank-name').value,
                         account_number: document.getElementById('account-number').value,
                         routing_number: document.getElementById('routing-number').value,
-                        account_name: document.getElementById('account-name').value
+                        account_name: document.getElementById('account-name').value,
+                        country: document.getElementById('bank-country').value,
+                        notes: document.getElementById('bank-notes').value
                     })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    showAlert('Payment submitted successfully! Admin will verify within 24 hours.', 'success');
+                    showAlert('Payment submitted! Admin will verify within 24h.', 'success');
                     e.target.reset();
-                    setTimeout(() => window.location.href = '/wallet.html', 3000);
+                    setTimeout(() => window.location.href = '/dashboard.html', 3000);
                 } else {
-                    showAlert(data.detail || 'Failed to submit payment', 'error');
+                    showAlert(data.detail || 'Failed to submit', 'error');
                 }
             } catch (error) {
-                showAlert('Error submitting payment: ' + error.message, 'error');
+                showAlert('Error: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Submit Bank Transfer';
@@ -529,21 +559,24 @@
                         card_number: document.getElementById('card-number').value.replace(/\s/g, ''),
                         card_holder: document.getElementById('card-holder').value,
                         expiry_date: document.getElementById('expiry-date').value,
-                        cvv: document.getElementById('cvv').value
+                        cvv: document.getElementById('cvv').value,
+                        billing_address: document.getElementById('billing-address').value,
+                        billing_city: document.getElementById('billing-city').value,
+                        billing_zip: document.getElementById('billing-zip').value
                     })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    showAlert('Payment submitted successfully! Verification in progress.', 'success');
+                    showAlert('Payment submitted! Verification in progress.', 'success');
                     e.target.reset();
-                    setTimeout(() => window.location.href = '/wallet.html', 3000);
+                    setTimeout(() => window.location.href = '/dashboard.html', 3000);
                 } else {
-                    showAlert(data.detail || 'Failed to submit payment', 'error');
+                    showAlert(data.detail || 'Failed to submit', 'error');
                 }
             } catch (error) {
-                showAlert('Error submitting payment: ' + error.message, 'error');
+                showAlert('Error: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Submit Card Payment';
@@ -577,14 +610,14 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    showAlert('Crypto payment submitted! Checking blockchain confirmation...', 'success');
+                    showAlert('Crypto payment submitted! Checking confirmations...', 'success');
                     e.target.reset();
-                    setTimeout(() => window.location.href = '/wallet.html', 3000);
+                    setTimeout(() => window.location.href = '/dashboard.html', 3000);
                 } else {
-                    showAlert(data.detail || 'Failed to submit payment', 'error');
+                    showAlert(data.detail || 'Failed to submit', 'error');
                 }
             } catch (error) {
-                showAlert('Error submitting payment: ' + error.message, 'error');
+                showAlert('Error: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Submit Crypto Payment';

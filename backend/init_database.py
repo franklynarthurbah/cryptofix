@@ -73,7 +73,7 @@ async def initialize_database():
         print(f"⚠️  KYC indexes: {e}")
     
     try:
-        await db.payment_submissions.create_index([("user_id", 1), ("status", 1)])
+        await db.payments.create_index([("user_id", 1), ("status", 1)])
         print("✅ Payment indexes created")
     except Exception as e:
         print(f"⚠️  Payment indexes: {e}")

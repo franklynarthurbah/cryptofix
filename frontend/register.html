@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CryptoVault</title>
+    <title>Register - CryptoVault</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
             padding: 20px;
         }
 
-        .login-container {
+        .register-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -32,7 +32,7 @@
             grid-template-columns: 1fr 1fr;
         }
 
-        .login-left {
+        .register-left {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 60px;
             color: white;
@@ -41,18 +41,18 @@
             justify-content: center;
         }
 
-        .login-left h2 {
+        .register-left h2 {
             font-size: 36px;
             margin-bottom: 20px;
         }
 
-        .login-left p {
+        .register-left p {
             font-size: 16px;
             line-height: 1.6;
             opacity: 0.9;
         }
 
-        .login-right {
+        .register-right {
             padding: 60px;
         }
 
@@ -210,45 +210,50 @@
         }
 
         @media (max-width: 768px) {
-            .login-container {
+            .register-container {
                 grid-template-columns: 1fr;
             }
 
-            .login-left {
+            .register-left {
                 display: none;
             }
 
-            .login-right {
+            .register-right {
                 padding: 40px 30px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-left">
-            <h2>Welcome Back!</h2>
-            <p>Log in to access your portfolio and trade with 2,720,000+ active users worldwide.</p>
+    <div class="register-container">
+        <div class="register-left">
+            <h2>Join 2.72M+ Users!</h2>
+            <p>Create your account and start trading with over 2,720,000 active users worldwide. Secure, fast, and trusted by millions.</p>
             <div style="margin-top: 40px;">
-                <div style="margin-bottom: 15px;">✅ Secure login</div>
-                <div style="margin-bottom: 15px;">✅ Real-time trading</div>
-                <div style="margin-bottom: 15px;">✅ 24/7 support</div>
-                <div>✅ Low fees</div>
+                <div style="margin-bottom: 15px;">✅ Secure registration</div>
+                <div style="margin-bottom: 15px;">✅ Instant verification</div>
+                <div style="margin-bottom: 15px;">✅ $1000 welcome bonus</div>
+                <div>✅ 24/7 support</div>
             </div>
         </div>
 
-        <div class="login-right">
+        <div class="register-right">
             <div class="logo">🔐 CryptoVault</div>
-            <h1>Login to Your Account</h1>
+            <h1>Create Your Account</h1>
 
             <div class="security-notice">
-                <h4>🔒 Secure Login</h4>
-                <p>Phone number REQUIRED for secure account access and verification.</p>
+                <h4>🔒 Your Information is Secure</h4>
+                <p>All data is encrypted. Phone verification REQUIRED for account security.</p>
             </div>
 
             <div class="alert" id="alert"></div>
 
-            <form id="loginForm">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name" minlength="2">
+                </div>
+
                 <div class="form-group">
                     <label for="email">Email Address <span class="required">*</span></label>
                     <input type="email" id="email" required placeholder="Enter your email">
@@ -271,19 +276,24 @@
                         </select>
                         <input type="tel" id="phone" required placeholder="Phone number" pattern="[0-9]{6,15}">
                     </div>
-                    <div class="help-text required-text">⚠️ MANDATORY: Phone verification for secure access</div>
+                    <div class="help-text required-text">⚠️ MANDATORY: Phone verification required for account access</div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password <span class="required">*</span></label>
-                    <input type="password" id="password" required placeholder="Enter your password">
+                    <input type="password" id="password" required placeholder="Create password" minlength="8">
                 </div>
 
-                <button type="submit" class="btn" id="loginBtn">Login</button>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirm password" minlength="8">
+                </div>
+
+                <button type="submit" class="btn" id="registerBtn">Create Account</button>
             </form>
 
             <div class="form-footer">
-                <p>Don't have an account? <a href="/register.html">Sign up here</a></p>
+                <p>Already have an account? <a href="/login.html">Sign in here</a></p>
                 <p style="margin-top: 15px;"><a href="/">← Back to Home</a></p>
             </div>
         </div>
@@ -303,35 +313,45 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const btn = document.getElementById('loginBtn');
+            const btn = document.getElementById('registerBtn');
             btn.disabled = true;
-            btn.textContent = 'Logging in...';
+            btn.textContent = 'Creating Account...';
 
+            const fullName = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const countryCode = document.getElementById('countryCode').value;
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                return;
+            }
 
             if (!phone || phone.length < 6) {
-                showAlert('Phone number REQUIRED for login', 'error');
+                showAlert('Valid phone number REQUIRED for registration', 'error');
                 btn.disabled = false;
-                btn.textContent = 'Login';
+                btn.textContent = 'Create Account';
                 return;
             }
 
             const fullPhone = countryCode + phone;
 
             try {
-                const response = await fetch(`${API_URL}/auth/login`, {
+                const response = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         email: email,
-                        phone: fullPhone,
-                        password: password
+                        password: password,
+                        full_name: fullName,
+                        phone: fullPhone
                     })
                 });
 
@@ -340,17 +360,17 @@
                 if (response.ok) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    showAlert('Login successful! Redirecting...', 'success');
-                    setTimeout(() => window.location.href = '/dashboard.html', 1000);
+                    showAlert('Account created! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = '/dashboard.html', 1500);
                 } else {
-                    showAlert(data.detail || 'Invalid credentials', 'error');
+                    showAlert(data.detail || 'Registration failed', 'error');
                     btn.disabled = false;
-                    btn.textContent = 'Login';
+                    btn.textContent = 'Create Account';
                 }
             } catch (error) {
                 showAlert('Connection error. Try again.', 'error');
                 btn.disabled = false;
-                btn.textContent = 'Login';
+                btn.textContent = 'Create Account';
             }
         });
     </script>
